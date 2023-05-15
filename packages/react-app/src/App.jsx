@@ -482,6 +482,8 @@ function App(props) {
   }
 
   const buyTokensEvents = useEventListener(readContracts, "Vendor", "BuyTokens", localProvider, 1);
+  const partiallySellEvents = useEventListener(readContracts, "Vendor", "PartiallySell", localProvider, 1);
+  const fullSellEvents = useEventListener(readContracts, "Vendor", "FullSell", localProvider, 1);
   console.log("📟 buyTokensEvents:", buyTokensEvents);
 
   const [tokenBuyAmount, setTokenBuyAmount] = useState({
@@ -637,7 +639,7 @@ function App(props) {
                 </div>
               </Card>
             </div>
-            {/*Extra UI for buying the tokens back from the user using "approve" and "sellTokens"
+            {/* Extra UI for buying the tokens back from the user using "approve" and "sellTokens" */}
 
             <Divider />
             <div style={{ padding: 8, marginTop: 32, width: 300, margin: "auto" }}>
@@ -714,7 +716,7 @@ function App(props) {
 
               </Card>
             </div>
-            */}
+           
             <div style={{ padding: 8, marginTop: 32 }}>
               <div>Vendor Token Balance:</div>
               <Balance balance={vendorTokenBalance} fontSize={64} />
@@ -736,6 +738,40 @@ function App(props) {
                       <Balance balance={item.args[1]} />
                       ETH to get
                       <Balance balance={item.args[2]} />
+                      Tokens
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+
+            <div style={{ width: 500, margin: "auto", marginTop: 64 }}>
+              <div>Partially Sell Events:</div>
+              <List
+                dataSource={partiallySellEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item.blockNumber + item.blockHash}>
+                      <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /> sell
+                      <Balance balance={item.args[1]} />
+                      Tokens and actually need to buy
+                      <Balance balance={item.args[2]} />
+                      Tokens
+                    </List.Item>
+                  );
+                }}
+              />
+            </div>
+
+            <div style={{ width: 500, margin: "auto", marginTop: 64 }}>
+              <div>Full Sell Events:</div>
+              <List
+                dataSource={fullSellEvents}
+                renderItem={item => {
+                  return (
+                    <List.Item key={item.blockNumber + item.blockHash}>
+                      <Address value={item.args[0]} ensProvider={mainnetProvider} fontSize={16} /> sell
+                      <Balance balance={item.args[1]} />
                       Tokens
                     </List.Item>
                   );
